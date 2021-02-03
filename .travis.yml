@@ -1,0 +1,18 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  - SOLR_HOST=my_solr:8983
+
+before_install:
+  - docker network create mynet
+  - docker run --net mynet --name my_solr  -d -p 8983:8983 -t solr:7.1-alpine -DzkRun -Denable.runtime.lib=true -m 500m
+
+install:
+  - docker build -t test/index-bioentities-module .
+
+script:
+  - sleep 10
+  - docker run -i --net mynet -v $( pwd )/tests:/usr/local/tests -e SOLR_HOST=$SOLR_HOST --entrypoint=/usr/local/tests/run-tests.sh test/index-bioentities-module

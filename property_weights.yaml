@@ -1,0 +1,22 @@
+# Property name - weight
+synonym:
+    property_weight: 10
+    property_name_id_weight: 0
+ensgene:
+    property_weight: 15
+    property_name_id_weight: 100
+symbol:
+    property_weight: 20
+    property_name_id_weight: 90
+gene_biotype:
+    property_weight: 0
+    property_name_id_weight: 80
+hgnc_symbol:
+    property_weight: 0
+    property_name_id_weight: 80
+uniprot:
+    property_weight: 0
+    property_name_id_weight: 80
+entrezgene:
+    property_weight: 0
+    property_name_id_weight: 80
