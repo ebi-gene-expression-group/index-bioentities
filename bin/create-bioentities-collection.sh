@@ -10,6 +10,7 @@ BASE_CONFIG=${SOLR_BASE_CONFIG:-"_default"}
 
 NUM_SHARDS=${SOLR_NUM_SHARDS:-1}
 REPLICATION_FACTOR=${SOLR_REPLICATION_FACTOR:-1}
+MAX_SHARDS_PER_NODE=${SOLR_MAX_SHARDS_PER_NODE:-1}
 
 printf "\n\nDeleting collection ${COLLECTION} based on ${HOST}\n"
 curl "http://${HOST}/solr/admin/collections?action=DELETE&name=${COLLECTION}&numShards=${NUM_SHARDS}&replicationFactor=${REPLICATION_FACTOR}"
@@ -21,7 +22,7 @@ printf "\n\nCreating config based on ${BASE_CONFIG} for our collection\n"
 curl "http://${HOST}/solr/admin/configs?action=CREATE&name=${COLLECTION}&baseConfigSet=${BASE_CONFIG}"
 
 printf "\n\nCreating collection ${COLLECTION} based on ${HOST}\n"
-curl "http://${HOST}/solr/admin/collections?action=CREATE&name=${COLLECTION}&numShards=${NUM_SHARDS}&replicationFactor=${REPLICATION_FACTOR}"
+curl "http://${HOST}/solr/admin/collections?action=CREATE&name=${COLLECTION}&numShards=${NUM_SHARDS}&replicationFactor=${REPLICATION_FACTOR}&maxShardsPerNode=$MAX_SHARDS_PER_NODE"
 
 #############################################################################################
 
