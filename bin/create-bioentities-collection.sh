@@ -28,11 +28,6 @@ curl "http://${HOST}/solr/admin/collections?action=CREATE&name=${COLLECTION}&num
 
 #############################################################################################
 
-printf "\n\nAliasing base collection bioentities to latest iteration ${COLLECTION}\n"
-curl "http://${HOST}/solr/admin/collections?action=CREATEALIAS&name=bioentities&collections=${COLLECTION}"
-
-#############################################################################################
-
 printf "\n\nDisabling auto-commit and soft auto-commit in ${COLLECTION}\n"
 curl "http://${HOST}/solr/${COLLECTION}/config" -H 'Content-type:application/json' -d '{
   "set-property": {
