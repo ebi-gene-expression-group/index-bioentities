@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-. ./schema-version.env
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+. ${DIR}/schema-version.env
 
 set -e
 
@@ -13,7 +15,7 @@ REPLICATION_FACTOR=${SOLR_REPLICATION_FACTOR:-1}
 MAX_SHARDS_PER_NODE=${SOLR_MAX_SHARDS_PER_NODE:-1}
 
 printf "\n\nDeleting collection ${COLLECTION} based on ${HOST}\n"
-curl "http://${HOST}/solr/admin/collections?action=DELETE&name=${COLLECTION}&numShards=${NUM_SHARDS}&replicationFactor=${REPLICATION_FACTOR}"
+curl "http://${HOST}/solr/admin/collections?action=DELETE&name=${COLLECTION}"
 
 printf "\n\nDelete config ${COLLECTION}\n"
 curl "http://${HOST}/solr/admin/configs?action=DELETE&name=${COLLECTION}"
@@ -23,11 +25,6 @@ curl "http://${HOST}/solr/admin/configs?action=CREATE&name=${COLLECTION}&baseCon
 
 printf "\n\nCreating collection ${COLLECTION} based on ${HOST}\n"
 curl "http://${HOST}/solr/admin/collections?action=CREATE&name=${COLLECTION}&numShards=${NUM_SHARDS}&replicationFactor=${REPLICATION_FACTOR}&maxShardsPerNode=$MAX_SHARDS_PER_NODE"
-
-#############################################################################################
-
-printf "\n\nAliasing base collection bioentities to latest iteration ${COLLECTION}\n"
-curl "http://${HOST}/solr/admin/collections?action=CREATEALIAS&name=bioentities&collections=${COLLECTION}"
 
 #############################################################################################
 
