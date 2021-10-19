@@ -1,9 +1,8 @@
-FROM python:3.9-alpine
+FROM mambaorg/micromamba:0.17.0 
 
-RUN apk add --no-cache --update bash curl jq bats \
-    g++ # To compile Pandas
-
-RUN pip install pyyaml pandas
+COPY --chown=micromamba:micromamba test-env.yaml /tmp/env.yaml
+RUN micromamba install -y -n base -f /tmp/env.yaml && \
+    micromamba clean --all --yes
 
 COPY bin/* /usr/local/bin/
 COPY property_weights.yaml /usr/local/
