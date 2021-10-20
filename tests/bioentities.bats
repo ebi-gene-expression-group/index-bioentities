@@ -47,11 +47,15 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
+#@test "[bioentities] Create JSONL file for human" {
+#  export BIOENTITIES=
+#}
+
 @test "[bioentities] Load data to Solr" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
-  export BIOENTITIES_TSV=$BATS_TEST_DIRNAME/fixtures/homo_sapiens.ensgene.tsv
+  export BIOENTITIES_TSV=$BATS_TEST_DIRNAME/fixtures/bioentities_properties/ensembl/homo_sapiens.ensgene.tsv
   export PROPERTY_WEIGHTS_YAML=$BATS_TEST_DIRNAME/../property_weights.yaml
   run load-bioentities-collection.sh
   echo "output = ${output}"

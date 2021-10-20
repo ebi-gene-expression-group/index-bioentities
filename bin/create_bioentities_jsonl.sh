@@ -10,18 +10,29 @@ require_env_var "ZK_HOST"
 require_env_var "ZK_PORT"
 require_env_var "BIOENTITIES"
 require_env_var "output_dir"
+require_env_var "EXPERIMENT_FILES"
+require_env_var "jdbc_url"
+require_env_var "jdbc_username"
+require_env_var "jdbc_password"
+require_env_var "server_port"
+
 
 java_opts="-Dsolr.host=$SOLR_HOST"
 java_opts="$java_opts -Dsolr.port=$SOLR_PORT"
 java_opts="$java_opts -Dzk.host=$ZK_HOST"
 java_opts="$java_opts -Dzk.port=$ZK_PORT"
 java_opts="$java_opts -Ddata.files.location=$BIOENTITIES"
+java_opts="$java_opts -Dexperiment.files.location=$EXPERIMENT_FILES"
+java_opts="$java_opts -Djdbc.url=$jdbc_url"
+java_opts="$java_opts -Djdbc.username=$jdbc_username"
+java_opts="$java_opts -Djdbc.password=$jdbc_password"
+java_opts="$java_opts -Dserver.port=$server_port"
 
 # This will index everything that it is available in $BIOENTITIES
 # To do separate species, link files of specific species to a new directory
 # and point it there.
 
-java $java_opts -jar $jar_dir/atlas-cli-bulk.jar bioentities-json -o $output_dir
+java $java_opts -jar $jar_dir/atlas-cli-bulk.jar bioentities-json -o ${output_dir}/
 
 # These scripts could be added to index-gxa
 #cp scripts/delete_bioentities_species.sh $PREFIX/bin
