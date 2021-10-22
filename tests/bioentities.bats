@@ -55,7 +55,7 @@ setup() {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
-  export BIOENTITIES_TSV=$BATS_TEST_DIRNAME/fixtures/bioentities_properties/ensembl/homo_sapiens.ensgene.tsv
+  export BIOENTITIES_TSV=$BATS_TEST_DIRNAME/fixtures/bioentity_properties/annotations/homo_sapiens.ensgene.tsv
   export PROPERTY_WEIGHTS_YAML=$BATS_TEST_DIRNAME/../property_weights.yaml
   run load-bioentities-collection.sh
   echo "output = ${output}"
@@ -102,4 +102,18 @@ setup() {
 
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
+}
+
+@test "[bioentities] Create bioentities JSONL for human" {
+  export output_dir=$( pwd )
+  export SOLR_HOST=my_solr
+  export SOLR_PORT=8983
+  export CONDA_PREFIX=/opt/conda
+
+  run create_bioentities_jsonl.sh
+
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+  [ -f "$( pwd )/homo_sapiens.ensgene.jsonl" ]
 }
