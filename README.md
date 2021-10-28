@@ -22,7 +22,7 @@ appropriate host and port):
 ```bash
 export SOLR_HOST=localhost:8983
 
-create-bioentities-collections.sh
+create-bioentities-collection.sh
 create-bioentities-schema.sh
 ```
 
