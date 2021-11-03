@@ -1,4 +1,0 @@
-channels:
- - ebi-gene-expression-group
-dependencies:
- - atlas-web-bulk-cli
