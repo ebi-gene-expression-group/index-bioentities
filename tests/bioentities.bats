@@ -135,10 +135,20 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Make mappings from bioentities to experiments" {
+@test "[bioentities] Make mappings from bioentities for experiments" {
   # This will require adding some experiment files into tests/fixtures/experiment_files/magetab
   # that are compatible with the fixtures/bioentity_properties/homo_sapiens.ensgene.tsv
   # (this means that the gene identifiers match)
+  export ACCESSIONS=E-MTAB-4754
+  export SOLR_HOST=my_solr
+  export SOLR_PORT=8983
+  export CONDA_PREFIX=/opt/conda
+  export output_dir=$( pwd )
 
+  run create_bioentities_property_map.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+  [ -f "$( pwd )/homo_sapiens.map.bin" ]
   # Check that the mapping output exists
 }
