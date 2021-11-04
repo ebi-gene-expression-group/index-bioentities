@@ -127,6 +127,8 @@ setup() {
     skip "ORGANISM not defined, skipping load to solr"
   fi
 
+  export BIOENTITIES_JSONL_PATH=$( pwd )
+
   run index_organism_annotations.sh
 
   echo "output = ${output}"
