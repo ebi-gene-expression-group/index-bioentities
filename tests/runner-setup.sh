@@ -4,8 +4,8 @@ DIR=$(dirname ${BASH_SOURCE[0]})
 export PATH=${DIR}/../bin:${DIR}/../tests:${PATH}
 
 # For java cli
-export ZK_HOST=localhost # fake
-export ZK_PORT=8777 # fake
+export ZK_HOST=${ZK_HOST:localhost}
+export ZK_PORT=${ZK_PORT:-2181}
 export BIOENTITIES=$DIR/fixtures/
 export EXPERIMENT_FILES=$DIR/fixtures/experiment_files
 export jdbc_url="jdbc:postgresql://postgres:5432/scxa-test"
