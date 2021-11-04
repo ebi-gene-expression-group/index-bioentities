@@ -2,9 +2,10 @@
 
 export SOLR_HOST=my_solr:8983
 export ZK_HOST=gxa-zk-1
+export ZK_PORT=2181
 
 docker network create mynet
-docker run --rm --net mynet --name $ZK_HOST -d -p 2181:2181 -e ZOO_MY_ID=1 -e ZOO_SERVERS='server.1=0.0.0.0:2888:3888' -t zookeeper:3.4.14
+docker run --rm --net mynet --name $ZK_HOST -d -p $ZK_PORT:$ZK_PORT -e ZOO_MY_ID=1 -e ZOO_SERVERS='server.1=0.0.0.0:2888:3888' -t zookeeper:3.4.14
 docker run --rm --net mynet --name my_solr -d -p 8983:8983 -e ZK_HOST=$ZK_HOST:$ZK_PORT -t solr:7.1-alpine -Denable.runtime.lib=true -DzkRun -m 500m
 # For atlas-web-bulk-cli application context
 docker run --rm --name postgres --net mynet -e POSTGRES_PASSWORD=postgresPass -e POSTGRES_USER=scxa -e POSTGRES_DB=scxa-test -p 5432:5432 -d postgres:10.3-alpine
