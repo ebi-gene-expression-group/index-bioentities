@@ -117,3 +117,26 @@ setup() {
   [ "${status}" -eq 0 ]
   [ -f "$( pwd )/homo_sapiens.ensgene.jsonl" ]
 }
+
+@test "[bioentities] Load species into SOLR" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping load to Solr"
+  fi
+
+  if [ -z ${ORGANISM+x} ]; then
+    skip "ORGANISM not defined, skipping load to solr"
+  fi
+
+  run index_organism_annotations.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+}
+
+@test "[bioentities] Make mappings from bioentities to experiments" {
+  # This will require adding some experiment files into tests/fixtures/experiment_files/magetab
+  # that are compatible with the fixtures/bioentity_properties/homo_sapiens.ensgene.tsv
+  # (this means that the gene identifiers match)
+
+  # Check that the mapping output exists
+}
