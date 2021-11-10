@@ -57,7 +57,7 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Load data to Solr" {
+@test "[bioentities] Load data to Solr (old way)" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
@@ -122,6 +122,18 @@ setup() {
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
   [ -f "$( pwd )/homo_sapiens.ensgene.jsonl" ]
+}
+
+@test "[bioentities] Delete data for species" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping load to Solr"
+  fi
+  export SPECIES=homo_sapiens
+
+  run delete_bioentities_species.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
 }
 
 @test "[bioentities] Load species into SOLR" {
