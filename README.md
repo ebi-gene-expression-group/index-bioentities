@@ -63,7 +63,7 @@ export SOLR_PORT=8983
 # create JSONL
 ./bin/create_bioentities_jsonl.sh
 # Load
-export ORGANISM=homo_sapiens
+export SPECIES=homo_sapiens
 export BIOENTITIES_JSONL_PATH=$( pwd )
 
 ./bin/index_organism_annotations.sh

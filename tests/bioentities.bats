@@ -129,8 +129,8 @@ setup() {
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
 
-  if [ -z ${ORGANISM+x} ]; then
-    skip "ORGANISM not defined, skipping load to solr"
+  if [ -z ${SPECIES+x} ]; then
+    skip "SPECIES not defined, skipping load to solr"
   fi
 
   export BIOENTITIES_JSONL_PATH=$( pwd )
