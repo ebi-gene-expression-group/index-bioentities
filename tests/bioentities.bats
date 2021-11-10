@@ -47,9 +47,15 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-#@test "[bioentities] Create JSONL file for human" {
-#  export BIOENTITIES=
-#}
+@test "[bioentities] Check that all fields are in the created schema through alias" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping check of fields on schema"
+  fi
+  export SOLR_COLLECTION=bioentities
+  run bioentities-check-created-fields.sh
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+}
 
 @test "[bioentities] Load data to Solr" {
   if [ -z ${SOLR_HOST+x} ]; then
