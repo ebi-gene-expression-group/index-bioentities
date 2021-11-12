@@ -129,6 +129,8 @@ setup() {
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
   export SPECIES=homo_sapiens
+  export SOLR_HOST=my_solr
+  export SOLR_PORT=8983
 
   run delete_bioentities_species.sh
 
@@ -161,12 +163,12 @@ setup() {
   export SOLR_HOST=my_solr
   export SOLR_PORT=8983
   export CONDA_PREFIX=/opt/conda
-  export output_dir=$( pwd )
+  export output_dir=/usr/local/tests
 
   run create_bioentities_property_map.sh
 
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
-  [ -f "$( pwd )/homo_sapiens.map.bin" ]
+  [ -f "/usr/local/tests/homo_sapiens.map.bin" ]
   # Check that the mapping output exists
 }
