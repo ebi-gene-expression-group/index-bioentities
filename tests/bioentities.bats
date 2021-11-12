@@ -163,12 +163,12 @@ setup() {
   export SOLR_HOST=my_solr
   export SOLR_PORT=8983
   export CONDA_PREFIX=/opt/conda
-  export output_dir=/usr/local/tests
+  export output_dir=$( pwd )
 
   run create_bioentities_property_map.sh
 
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
-  [ -f "/usr/local/tests/homo_sapiens.map.bin" ]
+  [ -f "$( pwd )/homo_sapiens.map.bin" ]
   # Check that the mapping output exists
 }
