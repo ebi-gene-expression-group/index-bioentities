@@ -48,6 +48,7 @@ This approach uses the atlas-web-cli JAR through conda, and is the most current 
 # here we show tests settings
 export ZK_HOST=${ZK_HOST:localhost}
 export ZK_PORT=${ZK_PORT:-2181}
+export SOLR_HOST=my_solr:8983
 export BIOENTITIES=$DIR/fixtures/
 export EXPERIMENT_FILES=$DIR/fixtures/experiment_files
 export jdbc_url="jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
@@ -56,9 +57,6 @@ export jdbc_password=$POSTGRES_PASSWORD
 export server_port=8081 #fake
 
 export output_dir=$( pwd )
-# currently this part expects separate HOST and PORT... this could be improved
-export SOLR_HOST=my_solr
-export SOLR_PORT=8983
 
 # create JSONL
 ./bin/create_bioentities_jsonl.sh
@@ -78,6 +76,7 @@ to create mapping files from the expression data to the bioentities metadata.
 # here we show tests settings
 export ZK_HOST=${ZK_HOST:localhost}
 export ZK_PORT=${ZK_PORT:-2181}
+export SOLR_HOST=my_solr:8983
 export BIOENTITIES=$DIR/fixtures/
 export EXPERIMENT_FILES=$DIR/fixtures/experiment_files
 export jdbc_url="jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
@@ -86,8 +85,6 @@ export jdbc_password=$POSTGRES_PASSWORD
 export server_port=8081 #fake
 
 export ACCESSIONS=E-MTAB-4754
-export SOLR_HOST=my_solr
-export SOLR_PORT=8983
 export CONDA_PREFIX=/opt/conda
 export output_dir=$( pwd )
 
