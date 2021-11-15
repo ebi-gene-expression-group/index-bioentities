@@ -5,7 +5,6 @@ scriptDir=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $scriptDir/common_routines.sh
 
 require_env_var "SOLR_HOST"
-require_env_var "SOLR_PORT"
 require_env_var "ZK_HOST"
 require_env_var "ZK_PORT"
 require_env_var "BIOENTITIES"
@@ -16,6 +15,10 @@ require_env_var "jdbc_username"
 require_env_var "jdbc_password"
 require_env_var "server_port"
 
+SOLR_PORT=$(get_port_from_hostport $SOLR_HOST)
+SOLR_HOST=$(get_host_from_hostport $SOLR_HOST)
+
+require_env_var "SOLR_PORT"
 
 java_opts="-Dsolr.host=$SOLR_HOST"
 java_opts="$java_opts -Dsolr.port=$SOLR_PORT"

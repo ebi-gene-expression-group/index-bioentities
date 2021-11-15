@@ -111,9 +111,10 @@ setup() {
 }
 
 @test "[bioentities] Create bioentities JSONL for human" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
+  fi
   export output_dir=$( pwd )
-  export SOLR_HOST=my_solr
-  export SOLR_PORT=8983
   export CONDA_PREFIX=/opt/conda
 
   run create_bioentities_jsonl.sh
@@ -129,8 +130,6 @@ setup() {
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
   export SPECIES=homo_sapiens
-  export SOLR_HOST=my_solr
-  export SOLR_PORT=8983
 
   run delete_bioentities_species.sh
 
@@ -156,12 +155,14 @@ setup() {
 }
 
 @test "[bioentities] Make mappings from bioentities for experiments" {
-  # This will require adding some experiment files into tests/fixtures/experiment_files/magetab
+  # This uses experiments in tests/fixtures/experiment_files/magetab
   # that are compatible with the fixtures/bioentity_properties/homo_sapiens.ensgene.tsv
-  # (this means that the gene identifiers match)
+  # and that are compatible with the steps that loaded experiments into the
+  # testing database for infrastructure purposes.
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
+  fi
   export ACCESSIONS=E-MTAB-4754
-  export SOLR_HOST=my_solr
-  export SOLR_PORT=8983
   export CONDA_PREFIX=/opt/conda
   export output_dir=$( pwd )
 
