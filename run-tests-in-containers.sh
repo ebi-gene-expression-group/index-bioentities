@@ -19,7 +19,6 @@ docker run --rm --net mynet --name $POSTGRES_HOST \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_DB=$POSTGRES_DB \
   -p $POSTGRES_PORT:$POSTGRES_PORT -d postgres:10.3-alpine
-docker build -t test/index-bioentities-module .
 
 sleep 10s
 
@@ -53,7 +52,7 @@ docker run --rm -i --net mynet \
   -e jdbc_url=$jdbc_url \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  --entrypoint=/usr/local/tests/run-tests.sh test/index-bioentities-module
+  --entrypoint=/usr/local/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.0
 
 # docker stop my_solr
 # docker network rm mynet
