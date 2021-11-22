@@ -46,6 +46,7 @@ docker run --rm -i --net mynet \
 
 docker run --rm -i --net mynet \
   -v $( pwd )/tests:/usr/local/tests \
+  -v $( pwd )/bin:/usr/local/index-bioentities \
   -e SOLR_HOST=$SOLR_HOST \
   -e ZK_HOST=$ZK_HOST \
   -e ZK_PORT=$ZK_PORT \
