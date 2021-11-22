@@ -45,8 +45,8 @@ docker run --rm -i --net mynet \
   /tmp/load_experiment_query.sh E-MTAB-4754 RNASEQ_MRNA_BASELINE 'Homo sapiens'
 
 docker run --rm -i --net mynet \
-  -v $( pwd )/tests:/usr/local/tests \
-  -v $( pwd )/bin:/usr/local/index-bioentities \
+  -v $( pwd )/tests:/usr/local/index-bioentities/tests \
+  -v $( pwd )/bin:/usr/local/index-bioentities/bin \
   -e SOLR_HOST=$SOLR_HOST \
   -e ZK_HOST=$ZK_HOST \
   -e ZK_PORT=$ZK_PORT \

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR=$(dirname ${BASH_SOURCE[0]})
-export PATH=/usr/local/index-bioentities:${DIR}/../bin:${DIR}/../tests:${PATH}
+export PATH=${DIR}/../bin:${DIR}/../tests:${PATH}
 
 # For java cli
 export ZK_HOST=${ZK_HOST:localhost}
