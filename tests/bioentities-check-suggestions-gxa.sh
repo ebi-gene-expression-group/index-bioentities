@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-. ../schema-version.env
+. ../bin/schema-version.env
 
 set -e
 
