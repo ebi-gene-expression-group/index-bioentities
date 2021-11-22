@@ -47,6 +47,7 @@ docker run --rm -i --net mynet \
 docker run --rm -i --net mynet \
   -v $( pwd )/tests:/usr/local/index-bioentities/tests \
   -v $( pwd )/bin:/usr/local/index-bioentities/bin \
+  -v $( pwd )/property_weights.yaml:/usr/local/index-bioentities/property_weights.yaml \
   -e SOLR_HOST=$SOLR_HOST \
   -e ZK_HOST=$ZK_HOST \
   -e ZK_PORT=$ZK_PORT \

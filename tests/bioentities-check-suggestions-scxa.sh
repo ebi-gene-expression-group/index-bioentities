@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-. ../bin/schema-version.env
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+. ${DIR}/../bin/schema-version.env
 
 set -e
 
