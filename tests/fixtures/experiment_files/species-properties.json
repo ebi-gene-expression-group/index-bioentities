@@ -1,0 +1,11 @@
+[{
+  "name":"Homo_sapiens",
+  "defaultQueryFactorType":"ORGANISM_PART",
+  "kingdom":"animals",
+  "resources":[{
+    "type":"genome_browser",
+    "name":"Ensembl",
+    "url":"https://www.ensembl.org/Homo_sapiens"
+  }]
+}
+]
