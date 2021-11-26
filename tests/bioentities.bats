@@ -137,6 +137,20 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
+@test "[bioentities] Test failed deletion" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping load to Solr"
+  fi
+  export SPECIES=homo_sapiens
+  export SOLR_HOST=fake-solr-host-to-fail
+
+  run delete_bioentities_species.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 1 ]
+}
+
+
 @test "[bioentities] Load species into SOLR" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
