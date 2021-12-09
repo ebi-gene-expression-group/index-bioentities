@@ -36,6 +36,9 @@ if [ -z ${ACCESSIONS+x} ]; then
   $cmd -s $SPECIES
   status=$?
 else
+  if [ ! -z ${failed_accessions_output+x} ]; then
+    cmd="$cmd -f $failed_accessions_output"
+  fi
   # we run for specific accessions
   $cmd -e $ACCESSIONS
   status=$?
