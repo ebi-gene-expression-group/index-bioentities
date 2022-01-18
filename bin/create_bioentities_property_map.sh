@@ -26,6 +26,7 @@ java_opts="$java_opts -Djdbc.url=$jdbc_url"
 java_opts="$java_opts -Djdbc.username=$jdbc_username"
 java_opts="$java_opts -Djdbc.password=$jdbc_password"
 java_opts="$java_opts -Dserver.port=$server_port"
+java_opts="$java_opts -Dspring.datasource.hikari.minimum-idle=2"
 
 cmd="java $java_opts -jar $jar_dir/atlas-cli-bulk.jar"
 cmd=$cmd" bioentities-map -o $output_dir/$SPECIES.map.bin "

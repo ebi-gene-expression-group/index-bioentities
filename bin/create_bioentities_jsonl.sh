@@ -30,6 +30,7 @@ java_opts="$java_opts -Djdbc.url=$jdbc_url"
 java_opts="$java_opts -Djdbc.username=$jdbc_username"
 java_opts="$java_opts -Djdbc.password=$jdbc_password"
 java_opts="$java_opts -Dserver.port=$server_port"
+java_opts="$java_opts -Dspring.datasource.hikari.minimum-idle=2"
 
 # This will index everything that it is available in $BIOENTITIES
 # To do separate species, link files of specific species to a new directory
