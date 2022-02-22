@@ -93,6 +93,7 @@ setup() {
     skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
   fi
   run create-bioentities-suggesters-gxa.sh
+  run build-gxa-suggesters.sh
   run bioentities-check-suggestions-gxa.sh
 
   echo "output = ${output}"
