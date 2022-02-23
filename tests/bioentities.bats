@@ -88,12 +88,20 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Check suggestions of known and unknown terms in bulk Expression Atlas" {
+@test "[bioentities] Build suggesters of known and unknown terms in bulk Expression Atlas" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
   fi
-  run create-bioentities-suggesters-gxa.sh
   run build-gxa-suggesters.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+}
+
+@test "[bioentities] Check suggesters of known and unknown terms in bulk Expression Atlas" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
+  fi
   run bioentities-check-suggestions-gxa.sh
 
   echo "output = ${output}"
