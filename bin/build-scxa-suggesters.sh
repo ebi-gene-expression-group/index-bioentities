@@ -11,7 +11,7 @@ echo "Building bioentities scxa suggesters..."
 
 status=0
 for suggester in propertySuggesterNoHighlight bioentitySuggester; do
-  HTTP_STATUS=$(curl -w "%{http_code}" -o >(cat >&3) -s -o /dev/null "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
+  HTTP_STATUS=$(curl -w "%{http_code}" -o >(cat >&3) -s "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
 
   if [[ ! $HTTP_STATUS == 2* ]];
   then
