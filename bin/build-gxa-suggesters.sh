@@ -9,7 +9,7 @@ COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 echo "Building gxa bioentities suggesters..."
 
-HTTP_STATUS=$(curl -w "%{http_code}" -o >(cat >&3) -s -o /dev/null "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=propertySuggester&suggest.build=true")
+HTTP_STATUS=$(curl -w "%{http_code}" -o >(cat >&3) -s "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=propertySuggester&suggest.build=true")
 
 if [[ ! $HTTP_STATUS == 2* ]];
 then
