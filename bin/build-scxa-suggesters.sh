@@ -8,6 +8,8 @@ HOST=${SOLR_HOST:-"localhost:8983"}
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 echo "Building bioentities scxa suggesters..."
+# creates a new file descriptor 3 that redirects to 1 (STDOUT)
+exec 3>&1 
 
 status=0
 for suggester in propertySuggesterNoHighlight bioentitySuggester; do
