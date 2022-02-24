@@ -8,6 +8,8 @@ HOST=${SOLR_HOST:-"localhost:8983"}
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 echo "Building gxa bioentities suggesters..."
+# creates a new file descriptor 3 that redirects to 1 (STDOUT)
+exec 3>&1
 
 HTTP_STATUS=$(curl -w "%{http_code}" -o >(cat >&3) -s "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=propertySuggester&suggest.build=true")
 
