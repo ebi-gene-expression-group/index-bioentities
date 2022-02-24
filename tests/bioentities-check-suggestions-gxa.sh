@@ -8,9 +8,6 @@ set -e
 HOST=${SOLR_HOST:-"localhost:8983"}
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v$SCHEMA_VERSION"}
 
-echo "Checking suggesters..."
-
-curl -s -o /dev/null "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=propertySuggester&suggest.build=true"
 
 NUM_SUGGESTIONS=$(curl -s \
   "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=propertySuggester&suggest.q=pseudo" | \

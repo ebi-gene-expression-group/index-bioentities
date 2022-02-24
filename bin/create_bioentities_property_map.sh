@@ -25,6 +25,7 @@ java_opts="$java_opts -Dexperiment.files.location=$EXPERIMENT_FILES"
 java_opts="$java_opts -Djdbc.url=$jdbc_url"
 java_opts="$java_opts -Djdbc.username=$jdbc_username"
 java_opts="$java_opts -Djdbc.password=$jdbc_password"
+java_opts="$java_opts -Djdbc.max_pool_size=2"
 java_opts="$java_opts -Dserver.port=$server_port"
 
 cmd="java $java_opts -jar $jar_dir/atlas-cli-bulk.jar"
@@ -36,6 +37,9 @@ if [ -z ${ACCESSIONS+x} ]; then
   $cmd -s $SPECIES
   status=$?
 else
+  if [ ! -z ${failed_accessions_output+x} ]; then
+    cmd="$cmd -f $failed_accessions_output"
+  fi
   # we run for specific accessions
   $cmd -e $ACCESSIONS
   status=$?

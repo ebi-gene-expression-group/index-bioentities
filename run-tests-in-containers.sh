@@ -54,7 +54,7 @@ docker run --rm -i --net mynet \
   -e jdbc_url=$jdbc_url \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  --entrypoint=/usr/local/index-bioentities/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.0
+  --entrypoint=/usr/local/index-bioentities/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.5
 
 # docker stop my_solr
 # docker network rm mynet
