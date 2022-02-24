@@ -68,12 +68,11 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Check suggesters for bulk Expression Atlas have been properly created" {
+@test "[bioentities] Create suggesters for bulk Expression Atlas" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping suggesters check"
   fi
   run create-bioentities-suggesters-gxa.sh
-  run bioentities-check-created-suggesters-gxa.sh
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
 }
