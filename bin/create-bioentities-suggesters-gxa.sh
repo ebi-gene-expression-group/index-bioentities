@@ -9,14 +9,30 @@ COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 #############################################################################################
 
-printf "\n\nDelete request handler /suggest"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
-  "delete-searchcomponent" : "suggest"
-}' http://${HOST}/solr/${COLLECTION}/config
-
-printf "\n\nCreate search component for suggesters"
+printf "\n\nCreate empty search component for suggesters if it does not exist...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "add-searchcomponent": {
+    "name": "suggest",
+    "class": "solr.SuggestComponent"
+  }
+}' http://${HOST}/solr/${COLLECTION}/config
+
+printf "\n\nClear suggester configuration for bulk Expression Atlas...\n"
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "update-searchcomponent": {
+    "name": "suggest",
+    "class": "solr.SuggestComponent",
+    "suggester": [
+      {
+        "name": "propertySuggester"
+      }
+    ]
+  }
+}' http://${HOST}/solr/${COLLECTION}/config
+
+printf "\n\nAdd suggester for bulk Expression Atlas...\n"
+curl -X POST -H 'Content-type:application/json' --data-binary '{
+  "update-searchcomponent": {
     "name": "suggest",
     "class": "solr.SuggestComponent",
     "suggester": [
@@ -39,12 +55,12 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 
 #############################################################################################
 
-printf "\n\nDelete request handler /suggest"
+printf "\n\nDelete request handler /suggest...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-requesthandler" : "/suggest"
 }' http://${HOST}/solr/${COLLECTION}/config
 
-printf "\n\nCreate request handler /suggest"
+printf "\n\nCreate request handler /suggest...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "add-requesthandler" : {
     "name": "/suggest",
