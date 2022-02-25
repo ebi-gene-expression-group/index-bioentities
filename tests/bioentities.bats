@@ -198,6 +198,17 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
+@test "[bioentities] Optimise collection" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping load to Solr"
+  fi
+
+  run optimise-bioentities.sh
+
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+}
+
 @test "[bioentities] Make mappings from bioentities for experiments" {
   # This uses experiments in tests/fixtures/experiment_files/magetab
   # that are compatible with the fixtures/bioentity_properties/homo_sapiens.ensgene.tsv
