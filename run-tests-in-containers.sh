@@ -8,19 +8,28 @@ export POSTGRES_DB=gxa
 export POSTGRES_USER=gxa
 export POSTGRES_PASSWORD=postgresPass
 export POSTGRES_PORT=5432
+export DOCKER_NET=net-index-bioentities
 export jdbc_url="jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
 
-docker network create mynet
-docker run --rm --net mynet --name $ZK_HOST -d -p $ZK_PORT:$ZK_PORT -e ZOO_MY_ID=1 -e ZOO_SERVERS='server.1=0.0.0.0:2888:3888' -t zookeeper:3.4.14
-docker run --rm --net mynet --name my_solr -d -p 8983:8983 -e ZK_HOST=$ZK_HOST:$ZK_PORT -t solr:7.1-alpine -Denable.runtime.lib=true -DzkRun -m 500m
+docker_arch_line=""
+if [ $( arch ) == "arm64" ]; then
+    docker_arch_line="--platform linux/amd64"
+    echo "Changing arch $docker_arch_line"
+fi
+
+docker network rm $DOCKER_NET
+docker network create $DOCKER_NET
+docker run --rm --net $DOCKER_NET --name $ZK_HOST -d -p $ZK_PORT:$ZK_PORT -e ZOO_MY_ID=1 -e ZOO_SERVERS="server.1=$ZK_HOST:2888:3888;$ZK_PORT" -t zookeeper:3.5.8
+sleep 10
+docker run --rm --net $DOCKER_NET --name my_solr -d -p 8983:8983 -e ZK_HOST=$ZK_HOST:$ZK_PORT -t solr:7.7.1-alpine -Denable.runtime.lib=true -DzkRun -m 500m
 # For atlas-web-bulk-cli application context
-docker run --rm --net mynet --name $POSTGRES_HOST \
+docker run --rm --net $DOCKER_NET --name $POSTGRES_HOST \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_DB=$POSTGRES_DB \
-  -p $POSTGRES_PORT:$POSTGRES_PORT -d postgres:10.3-alpine
+  -p $POSTGRES_PORT:$POSTGRES_PORT -d postgres:10-alpine3.15
 
-sleep 10s
+sleep 20
 
 # Setup the database schema
 if [ ! -d "atlas-schemas" ]; then
@@ -28,13 +37,13 @@ if [ ! -d "atlas-schemas" ]; then
   wget https://github.com/ebi-gene-expression-group/atlas-schemas/tarball/master -O - | tar -xz
   mv ebi-gene-expression-group-atlas-schemas* atlas-schemas
 fi
-docker run --rm -i --net mynet \
+docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -v $( pwd )/atlas-schemas/flyway/gxa:/flyway/gxa \
   quay.io/ebigxa/atlas-schemas-base:1.0 \
   flyway migrate -url=$jdbc_url -user=$POSTGRES_USER -password=$POSTGRES_PASSWORD -locations=filesystem:/flyway/gxa
 
 # Add experiment to database
-docker run --rm -i --net mynet \
+docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -v $( pwd )/tests/load_experiment_query.sh:/tmp/load_experiment_query.sh \
   -e PGPASSWORD=$POSTGRES_PASSWORD \
   -e PGUSER=$POSTGRES_USER \
@@ -44,7 +53,7 @@ docker run --rm -i --net mynet \
   quay.io/ebigxa/atlas-schemas-base:1.0 \
   /tmp/load_experiment_query.sh E-MTAB-4754 RNASEQ_MRNA_BASELINE 'Homo sapiens'
 
-docker run --rm -i --net mynet \
+docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -v $( pwd )/tests:/usr/local/index-bioentities/tests \
   -v $( pwd )/bin:/usr/local/index-bioentities/bin \
   -v $( pwd )/property_weights.yaml:/usr/local/index-bioentities/property_weights.yaml \
@@ -57,4 +66,4 @@ docker run --rm -i --net mynet \
   --entrypoint=/usr/local/index-bioentities/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.5
 
 # docker stop my_solr
-# docker network rm mynet
+# docker network rm $DOCKER_NET
