@@ -213,13 +213,10 @@ setup() {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
-  COLLECTION=bioentities-v1
-
-  # result stores the number of deletedDocs for each core/shard of the collection
-  run curl "http://${SOLR_HOST}/solr/admin/collections?action=CLUSTERSTATUS&collection=${COLLECTION}" | jq '..|.replicas? | select( . != null ) | to_entries | .[] | .value | (.base_url|tostring)+"/admin/cores?action=STATUS&core="+(.core|tostring)' | xargs curl -s | jq '..|.deletedDocs? | select( . != null )' | uniq
+  run bioentities-check-optimisation.sh
 
   echo "output = ${output}"
-  [ "${result}" -eq 0 ]
+  [ "${status}" -eq 0 ]
 }
 
 @test "[bioentities] Make mappings from bioentities for experiments" {
