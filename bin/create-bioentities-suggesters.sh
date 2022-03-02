@@ -17,7 +17,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
   }
 }' http://${HOST}/solr/${COLLECTION}/config
 
-printf "\n\nClear suggester configuration for bulk Expression Atlas...\n"
+printf "\n\nClear suggester configuration for SCXA and GXA...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "update-searchcomponent": {
     "name": "suggest",
@@ -36,7 +36,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
   }
 }' http://${HOST}/solr/${COLLECTION}/config
 
-printf "\n\nAdd suggester for bulk Expression Atlas...\n"
+printf "\n\nAdd suggester for GXA and SCXA...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "update-searchcomponent": {
     "name": "suggest",
