@@ -25,6 +25,12 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
     "suggester": [
       {
         "name": "propertySuggester"
+      },
+      {
+        "name": "bioentitySuggester"
+      },
+      {
+        "name": "propertySuggesterNoHighlight"
       }
     ]
   }
