@@ -68,20 +68,20 @@ setup() {
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Create suggesters for bulk Expression Atlas" {
+@test "[bioentities] Create suggesters for GXA and SCXA Atlas" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping suggesters check"
   fi
-  run create-bioentities-suggesters-gxa.sh
+  run create-bioentities-suggesters.sh
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
 }
 
-@test "[bioentities] Build suggesters of known and unknown terms in bulk Expression Atlas" {
+@test "[bioentities] Build suggesters of known and unknown terms in GXA and SCXA" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
   fi
-  run build-gxa-suggesters.sh
+  run build-suggesters.sh
 
   echo "output = ${output}"
   [ "${status}" -eq 0 ]
@@ -92,27 +92,6 @@ setup() {
     skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
   fi
   run bioentities-check-suggestions-gxa.sh
-
-  echo "output = ${output}"
-  [ "${status}" -eq 0 ]
-}
-
-@test "[bioentities] Create suggesters in Single Cell Expression Atlas" {
-  if [ -z ${SOLR_HOST+x} ]; then
-    skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
-  fi
-  run create-bioentities-suggesters-scxa.sh
-
-  echo "output = ${output}"
-  [ "${status}" -eq 0 ]
-}
-
-
-@test "[bioentities] Build suggesters of known and unknown terms in Single Cell Expression Atlas" {
-  if [ -z ${SOLR_HOST+x} ]; then
-    skip "SOLR_HOST not defined, skipping suggestions of known gene symbol"
-  fi
-  run build-scxa-suggesters.sh
 
   echo "output = ${output}"
   [ "${status}" -eq 0 ]

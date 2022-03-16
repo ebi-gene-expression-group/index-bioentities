@@ -17,12 +17,15 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
   }
 }' http://${HOST}/solr/${COLLECTION}/config
 
-printf "\n\nClear suggesters configuration for Single Cell Expression Atlas...\n"
+printf "\n\nClear suggester configuration for SCXA and GXA...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "update-searchcomponent": {
     "name": "suggest",
     "class": "solr.SuggestComponent",
     "suggester": [
+      {
+        "name": "propertySuggester"
+      },
       {
         "name": "bioentitySuggester"
       },
@@ -33,12 +36,25 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
   }
 }' http://${HOST}/solr/${COLLECTION}/config
 
-printf "\n\Add suggesters for Single Cell Expression Atlas...\n"
+printf "\n\nAdd suggester for GXA and SCXA...\n"
 curl -X POST -H 'Content-type:application/json' --data-binary '{
   "update-searchcomponent": {
     "name": "suggest",
     "class": "solr.SuggestComponent",
     "suggester": [
+      {
+        "name": "propertySuggester",
+        "indexPath": "propertySuggester",
+        "lookupImpl": "AnalyzingInfixLookupFactory",
+        "dictionaryImpl": "DocumentDictionaryFactory",
+        "field": "property_value",
+        "contextField": "species",
+        "weightField": "property_weight",
+        "payloadField": "property_name",
+        "suggestAnalyzerFieldType": "text_en",
+        "queryAnalyzerFieldType": "text_en",
+        "buildOnStartup": "false"
+      },
       {
         "name": "bioentitySuggester",
         "indexPath": "bioentitySuggester",
