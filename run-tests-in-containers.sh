@@ -43,7 +43,14 @@ docker run --rm --net $DOCKER_NET --name $POSTGRES_HOST \
   -e POSTGRES_DB=$POSTGRES_DB \
   -p $POSTGRES_PORT:$POSTGRES_PORT -d postgres:10-alpine3.15
 
-sleep 20
+SECURITY_JSON=/usr/local/tests/security.json
+
+# Setup auth
+echo "Setup auth"
+docker run --net $DOCKER_NET \
+    -d -v $( pwd )/tests/security.json:$SECURITY_JSON \
+    -t solr:$SOLR_VERSION bin/solr zk cp file:$SECURITY_JSON zk:/security.json -z $ZK_HOST:$ZK_PORT
+
 
 # Setup the database schema
 if [ ! -d "atlas-schemas" ]; then
@@ -55,6 +62,8 @@ docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -v $( pwd )/atlas-schemas/flyway/gxa:/flyway/gxa \
   quay.io/ebigxa/atlas-schemas-base:1.0 \
   flyway migrate -url=$jdbc_url -user=$POSTGRES_USER -password=$POSTGRES_PASSWORD -locations=filesystem:/flyway/gxa
+
+sleep 20
 
 # Add experiment to database
 docker run --rm -i --net $DOCKER_NET $docker_arch_line \
