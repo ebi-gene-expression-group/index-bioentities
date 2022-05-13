@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
 export SOLR_HOST=my_solr:8983
+SOLR_CONT_NAME=my_solr
+SOLR_VERSION=8.7
 export ZK_HOST=gxa-zk-1
 export ZK_PORT=2181
+ZK_VERSION=3.5.8
 export POSTGRES_HOST=postgres
 export POSTGRES_DB=gxa
 export POSTGRES_USER=gxa
@@ -17,11 +20,22 @@ if [ $( arch ) == "arm64" ]; then
     echo "Changing arch $docker_arch_line"
 fi
 
+docker stop $SOLR_CONT_NAME && docker rm $SOLR_CONT_NAME
+docker stop $ZK_HOST && docker rm $ZK_HOST
 docker network rm $DOCKER_NET
 docker network create $DOCKER_NET
-docker run --rm --net $DOCKER_NET --name $ZK_HOST -d -p $ZK_PORT:$ZK_PORT -e ZOO_MY_ID=1 -e ZOO_SERVERS="server.1=$ZK_HOST:2888:3888;$ZK_PORT" -t zookeeper:3.5.8
+
+docker run --rm --net $DOCKER_NET --name $ZK_HOST \
+  -d -p $ZK_PORT:$ZK_PORT \
+  -e ZOO_MY_ID=1 \
+  -e ZOO_SERVERS="server.1=$ZK_HOST:2888:3888;$ZK_PORT" \
+  -t zookeeper:$ZK_VERSION
+
 sleep 10
-docker run --rm --net $DOCKER_NET --name my_solr -d -p 8983:8983 -e ZK_HOST=$ZK_HOST:$ZK_PORT -t solr:7.7.1-alpine -Denable.runtime.lib=true -DzkRun -m 500m
+docker run --rm --net $DOCKER_NET --name $SOLR_CONT_NAME \
+  -d -p 8983:8983 \
+  -e ZK_HOST=$ZK_HOST:$ZK_PORT \
+  -t solr:$SOLR_VERSION -c -m 500m
 # For atlas-web-bulk-cli application context
 docker run --rm --net $DOCKER_NET --name $POSTGRES_HOST \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
