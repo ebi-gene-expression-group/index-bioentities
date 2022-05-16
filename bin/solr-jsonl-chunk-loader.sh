@@ -10,6 +10,9 @@ require_env_var SCHEMA_VERSION
 
 COLLECTION=${SOLR_COLLECTION}-v${SCHEMA_VERSION}
 HOST=${SOLR_HOST:-'localhost:8983'}
+SOLR_USER=${SOLR_USER:-"solr"}
+SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
+SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
 # SOLR_PROCESSORS must be null or a comma-separated list of processors to use during an update
 if [[ $SOLR_PROCESSORS ]]
 then
@@ -21,7 +24,7 @@ exec 3>&1
 
 commit() {
   echo "Committing files..."
-  HTTP_STATUS=$(curl -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
+  HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
   then
@@ -35,7 +38,7 @@ post_json() {
 
   # The update/json/docs handler supports both regular JSON and JSON Lines:
   # https://solr.apache.org/guide/7_1/transforming-and-indexing-custom-json.html#multiple-documents-in-a-single-payload
-  local HTTP_STATUS=$(curl -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update/json/docs$PROCESSOR" --data-binary "@${1}" -H 'Content-type:application/json')
+  local HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update/json/docs$PROCESSOR" --data-binary "@${1}" -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
   then

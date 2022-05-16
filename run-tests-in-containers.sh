@@ -86,6 +86,10 @@ docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -e jdbc_url=$jdbc_url \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+  -e ADMIN_USER=atlas \
+  -e ADMIN_U_PWD=fjaso983dada \
+  -e QUERY_USER=queryu \
+  -e QUERY_U_PWD=fsaf897asd3 \
   --entrypoint=/usr/local/index-bioentities/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.5
 
 # docker stop my_solr

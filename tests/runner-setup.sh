@@ -13,3 +13,7 @@ export SPECIES=homo_sapiens
 export jdbc_username=$POSTGRES_USER
 export jdbc_password=$POSTGRES_PASSWORD
 export server_port=8081 #fake
+
+# Solr auth
+export SOLR_USER=$ADMIN_USER
+export SOLR_PASS=$ADMIN_U_PWD

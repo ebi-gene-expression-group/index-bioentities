@@ -7,10 +7,12 @@ set -e
 # on developers environment export SOLR_HOST_PORT and export SOLR_COLLECTION before running
 HOST=${SOLR_HOST:-"localhost:8983"}
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v$SCHEMA_VERSION"}
+SOLR_USER=${QUERY_USER:-"solr"}
+SOLR_PASS=${QUERY_U_PWD:-"SolrRocks"}
+SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
 
 
-NUM_DOCS=$(curl -s \
-   http://wp-p3s-67:8983/solr/bioentities-v1/select?q=species:aegilops_tauschii
+NUM_DOCS=$(curl $SOLR_AUTH -s \
   "http://${HOST}/solr/${COLLECTION}/select?q=species:$SPECIES" | \
   jq '.response.numFound')
 if (( ${NUM_DOCS} > 0 ))
