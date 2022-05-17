@@ -17,7 +17,7 @@ HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -H 'Content-type:a
     "set-user": {
         "'$ADMIN_USER'":"'$ADMIN_U_PWD'",
         "'$QUERY_USER'":"'$QUERY_U_PWD'"
-    }}' http://$HOST/solr/admin/authentication)
+    }}' http://$HOST/api/cluster/security/authentication)
 
 if [[ ! $HTTP_STATUS == 2* ]];
 then
@@ -41,9 +41,11 @@ fi
 
 # Give admin role permissions
 HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -H 'Content-type:application/json' -d '{
-  "set-permission": {"name": "all", "role":"admin"},
-  "set-permission": {"name": "read", "role":"guest"}
+  "set-permission": {"name": "read", "role":"guest"},
+  "set-permission": {"name": "read", "role":"guest", "path":"/suggest"},
+  "set-permission": {"name": "all", "role":"admin"}
 }' http://$HOST/solr/admin/authorization)
+# "set-permission": {"name": "read", "role":"guest", "path":"/suggest"},
 
 
 if [[ ! $HTTP_STATUS == 2* ]];
@@ -58,7 +60,7 @@ fi
 SOLR_AUTH="-u $ADMIN_USER:$ADMIN_U_PWD"
 HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -H 'Content-type:application/json' -d '{
         "delete-user": ["'$SOLR_USER'"]
-    }' http://$HOST/solr/admin/authentication)
+    }' http://$HOST/api/cluster/security/authentication)
 
 
 if [[ ! $HTTP_STATUS == 2* ]];
@@ -71,7 +73,7 @@ fi
 # Set blockUnknown to true to activate the auth
 HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -H 'Content-type:application/json' -d  '{
     "set-property": {"blockUnknown":true}
-    }' http://$HOST/solr/admin/authentication)
+    }' http://$HOST/api/cluster/security/authentication)
 
 if [[ ! $HTTP_STATUS == 2* ]];
 then
