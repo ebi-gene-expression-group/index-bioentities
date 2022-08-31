@@ -7,9 +7,12 @@ set -e
 # on developers environment export SOLR_HOST_PORT and export SOLR_COLLECTION before running
 HOST=${SOLR_HOST:-"localhost:8983"}
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v$SCHEMA_VERSION"}
+SOLR_USER=${QUERY_USER:-"solr"}
+SOLR_PASS=${QUERY_U_PWD:-"SolrRocks"}
+SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
 
 echo "Retrieving fields in the schema"
-curl "http://${HOST}/solr/${COLLECTION}/schema?wt=json" \
+curl $SOLR_AUTH "http://${HOST}/solr/${COLLECTION}/schema?wt=json" \
   | jq '.schema.fields + .schema.dynamicFields | .[].name ' | sed s/\"//g \
   | sort > bioentities_loaded_fields.txt
 

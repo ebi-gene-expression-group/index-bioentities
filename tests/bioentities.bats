@@ -17,6 +17,23 @@ setup() {
     [ "${status}" -eq 0 ]
 }
 
+@test "[solr-auth] Create definitive users" {
+  if [ -z ${SOLR_HOST+x} ]; then
+    skip "SOLR_HOST not defined, skipping loading of schema on Solr"
+  fi
+
+  # default user to start - admin user will be used by other tasks
+  export SOLR_USER=solr
+  export SOLR_PASS=SolrRocks
+
+  echo "Solr user: $SOLR_USER"
+  echo "Solr pwd: $SOLR_PASS"
+
+  run create-users.sh
+  echo "output = ${output}"
+  [ "${status}" -eq 0 ]
+}
+
 @test "[bioentities] Create collection on Solr" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping loading of schema on Solr"
@@ -24,6 +41,8 @@ setup() {
   if [ ! -z ${SOLR_COLLECTION_EXISTS+x} ]; then
     skip "Solr collection has been predifined on the current setup"
   fi
+  echo "Solr user: $SOLR_USER"
+  echo "Solr pwd: $SOLR_PASS"
   run create-bioentities-collection.sh
   echo "output = ${output}"
   [ "${status}" -eq 0 ]

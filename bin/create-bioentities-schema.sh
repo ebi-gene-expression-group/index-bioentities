@@ -5,12 +5,15 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # On developers environment export SOLR_HOST and export SOLR_COLLECTION before running
 HOST=${SOLR_HOST:-"localhost:8983"}
+SOLR_USER=${SOLR_USER:-"solr"}
+SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
+SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
 COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 #############################################################################################
 
 printf "\n\nDelete field type text_en"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field-type":
   {
     "name": "text_en"
@@ -18,7 +21,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\Create field type text_en"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field-type": {
     "name": "text_en",
     "class": "solr.TextField",
@@ -45,7 +48,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\delete copy-field bioentity_identifier_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-copy-field":{
      "source": "bioentity_identifier",
      "dest": "bioentity_identifier_dv"
@@ -53,7 +56,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field bioentity_identifier"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"bioentity_identifier"
@@ -61,7 +64,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field bioentity_dientifier (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"bioentity_identifier",
@@ -70,7 +73,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field bioentity_identifier_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"bioentity_identifier_dv"
@@ -78,7 +81,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\create field bioentity_identifier_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":{
      "name": "bioentity_identifier_dv",
      "type": "string"
@@ -86,7 +89,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\create copy-field bioentity_identifier_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-copy-field":{
      "source": "bioentity_identifier",
      "dest": "bioentity_identifier_dv"
@@ -96,7 +99,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete field bioentity_type"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"bioentity_type"
@@ -104,7 +107,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field bioentity_type (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"bioentity_type",
@@ -115,7 +118,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete copy-field property_name_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-copy-field":{
      "source": "property_name",
      "dest": "property_name_dv"
@@ -123,7 +126,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field property_name"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"property_name"
@@ -131,7 +134,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_name (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"property_name",
@@ -140,7 +143,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field property_name_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"property_name_dv"
@@ -148,7 +151,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_name_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":{
      "name": "property_name_dv",
      "type": "string"
@@ -156,7 +159,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate copy-field property_name_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-copy-field":{
      "source": "property_name",
      "dest": "property_name_dv"
@@ -166,7 +169,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete copy-field property_value"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-copy-field":{
      "source": "property_value",
      "dest": "property_value_dv"
@@ -174,7 +177,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field property_value"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field" :
   {
     "name":"property_value"
@@ -182,7 +185,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_value (text_en)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"property_value",
@@ -191,7 +194,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_value_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":{
      "name": "property_value_dv",
      "type": "string"
@@ -199,7 +202,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate copy-field property_value (text_en)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-copy-field":{
      "source": "property_value",
      "dest": "property_value_dv"
@@ -209,7 +212,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete copy-field species_dev (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-copy-field":{
      "source": "species",
      "dest": "species_dv"
@@ -217,7 +220,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field species"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"species"
@@ -225,7 +228,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field species (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"species",
@@ -234,7 +237,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nDelete field species_dv"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"species_dv"
@@ -242,7 +245,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field species_dev (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":{
      "name": "species_dv",
      "type": "string"
@@ -250,7 +253,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate copy-field species_dev (lowercase)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-copy-field":{
      "source": "species",
      "dest": "species_dv"
@@ -260,7 +263,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete field property_weight"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"property_weight"
@@ -268,7 +271,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_weight (pint)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"property_weight",
@@ -279,7 +282,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 #############################################################################################
 
 printf "\n\nDelete field property_name_id_weight"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "delete-field":
   {
     "name":"property_name_id_weight"
@@ -287,7 +290,7 @@ curl -X POST -H 'Content-type:application/json' --data-binary '{
 }' http://${HOST}/solr/${COLLECTION}/schema
 
 printf "\n\nCreate field property_name_id_weight (pdouble)"
-curl -X POST -H 'Content-type:application/json' --data-binary '{
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-field":
   {
     "name":"property_name_id_weight",

@@ -13,6 +13,8 @@ require_env_var "output_dir"
 
 SOLR_PORT=$(get_port_from_hostport $SOLR_HOST)
 SOLR_HOST=$(get_host_from_hostport $SOLR_HOST)
+SOLR_USER=${SOLR_USER:-"solr"}
+SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
 
 require_env_var "SOLR_PORT"
 
@@ -27,6 +29,9 @@ java_opts="$java_opts -Djdbc.username=$jdbc_username"
 java_opts="$java_opts -Djdbc.password=$jdbc_password"
 java_opts="$java_opts -Djdbc.max_pool_size=2"
 java_opts="$java_opts -Dserver.port=$server_port"
+# for solr auth
+java_opts="$java_opts -Dsolr.httpclient.builder.factory=org.apache.solr.client.solrj.impl.PreemptiveBasicAuthClientBuilderFactory"
+java_opts="$java_opts -Dbasicauth=$SOLR_USER:$SOLR_PASS"
 
 cmd="java $java_opts -jar $jar_dir/atlas-cli-bulk.jar"
 cmd=$cmd" bioentities-map -o $output_dir/$SPECIES.map.bin "
