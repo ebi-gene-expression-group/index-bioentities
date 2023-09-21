@@ -66,23 +66,28 @@ cleanup() {
 
 
 trap cleanup exit
-I=O
+# I is used to print the progress of a chunk file (e.g. 1/10)
+# J is used to round-robin the hosts
+I=0
+J=0
 for CHUNK_FILE in $CHUNK_FILES
 do
-  # Round-robin the hosts
-  SOLR_HOST=${SOLR_HOSTS_ARR[(( ${I} % ${#SOLR_HOSTS_ARR[@]} ))]}
   I=$(( $I + 1 ))
-
   echo "$CHUNK_FILE ${I}/$(wc -w <<< $CHUNK_FILES)"
 
+  SOLR_HOST=${SOLR_HOSTS_ARR[(( ${J} % ${#SOLR_HOSTS_ARR[@]} ))]}
+  J=$(( $J + 1 ))
   post_json ${SOLR_HOST} ${CHUNK_FILE}
 
   if [[ $(( $I % ( $COMMIT_DOCS / $NUM_DOCS_PER_BATCH) )) == 0 ]]
   then
     # Make the commit in the next host
-    I=$(( $I + 1 ))
-    SOLR_HOST=${SOLR_HOSTS_ARR[(( ${I} % ${#SOLR_HOSTS_ARR[@]} ))]}
+    J=$(( $J + 1 ))
+    SOLR_HOST=${SOLR_HOSTS_ARR[(( ${J} % ${#SOLR_HOSTS_ARR[@]} ))]}
     commit ${SOLR_HOST}
   fi
 done
-commit
+
+J=$(( $J + 1 ))
+SOLR_HOST=${SOLR_HOSTS_ARR[(( ${J} % ${#SOLR_HOSTS_ARR[@]} ))]}
+commit ${SOLR_HOST}
