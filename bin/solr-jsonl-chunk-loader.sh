@@ -9,7 +9,8 @@ require_env_var SOLR_COLLECTION
 require_env_var SCHEMA_VERSION
 
 COLLECTION=${SOLR_COLLECTION}-v${SCHEMA_VERSION}
-HOST=${SOLR_HOST:-'localhost:8983'}
+# Space separated list of hosts
+SOLR_HOSTS=${SOLR_HOSTS:-'localhost:8983'}
 SOLR_USER=${SOLR_USER:-"solr"}
 SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
 SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
@@ -22,9 +23,11 @@ fi
 # Creates a new file descriptor 3 that redirects to 1 (STDOUT) to see curl progress and also to cleanly capture http_code, see commit and post_json below
 exec 3>&1
 
+SOLR_HOSTS_ARR=(${SOLR_HOSTS})
+
 commit() {
   echo "Committing files..."
-  HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
+  HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
   then
@@ -38,7 +41,7 @@ post_json() {
 
   # The update/json/docs handler supports both regular JSON and JSON Lines:
   # https://solr.apache.org/guide/7_1/transforming-and-indexing-custom-json.html#multiple-documents-in-a-single-payload
-  local HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${HOST}/solr/${COLLECTION}/update/json/docs$PROCESSOR" --data-binary "@${1}" -H 'Content-type:application/json')
+  local HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update/json/docs$PROCESSOR" --data-binary "@${2}" -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
   then
@@ -48,7 +51,7 @@ post_json() {
 
 
 COMMIT_DOCS=${SOLR_COMMIT_DOCS:-1000000}
-echo "Loading $INPUT_JSONL into host $HOST collection $COLLECTION committing every ${COMMIT_DOCS} docs..."
+echo "Loading $INPUT_JSONL into hosts ${SOLR_HOSTS_ARR[@]} collection $COLLECTION committing every ${COMMIT_DOCS} docs..."
 
 CHUNK_PREFIX=${CHUNK_PREFIX:-`basename -s .jsonl ${INPUT_JSONL}`-}
 
@@ -66,15 +69,20 @@ trap cleanup exit
 I=O
 for CHUNK_FILE in $CHUNK_FILES
 do
+  # Round-robin the hosts
+  SOLR_HOST=${SOLR_HOSTS_ARR[(( ${I} % ${#SOLR_HOSTS_ARR[@]} ))]}
   I=$(( $I + 1 ))
 
   echo "$CHUNK_FILE ${I}/$(wc -w <<< $CHUNK_FILES)"
 
-  post_json ${CHUNK_FILE}
+  post_json ${SOLR_HOST} ${CHUNK_FILE}
 
   if [[ $(( $I % ( $COMMIT_DOCS / $NUM_DOCS_PER_BATCH) )) == 0 ]]
   then
-    commit
+    # Make the commit in the next host
+    I=$(( $I + 1 ))
+    SOLR_HOST=${SOLR_HOSTS_ARR[(( ${I} % ${#SOLR_HOSTS_ARR[@]} ))]}
+    commit ${SOLR_HOST}
   fi
 done
 commit
