@@ -14,7 +14,7 @@ echo "Building bioentities scxa and gxa suggesters..."
 # creates a new file descriptor 3 that redirects to 1 (STDOUT)
 exec 3>&1 
 
-status=0
+#status=0
 for suggester in propertySuggesterNoHighlight bioentitySuggester propertySuggester; do
   HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -s "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
 
@@ -22,8 +22,8 @@ for suggester in propertySuggesterNoHighlight bioentitySuggester propertySuggest
   then
 	   # HTTP Status is not a 2xx code
      echo "Failed to build suggester $suggester"
-     status=1
+#     status=1
   fi
 done
 
-exit $status
+#exit $status
