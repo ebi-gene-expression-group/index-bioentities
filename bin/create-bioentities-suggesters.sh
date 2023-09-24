@@ -8,7 +8,7 @@ HOST=${SOLR_HOST:-"localhost:8983"}
 SOLR_USER=${SOLR_USER:-"solr"}
 SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
 SOLR_AUTH="-u $SOLR_USER:$SOLR_PASS"
-COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
+COLLECTION="${SOLR_COLLECTION:-"bioentities"}-v${SCHEMA_VERSION:-"1"}"
 
 #############################################################################################
 
