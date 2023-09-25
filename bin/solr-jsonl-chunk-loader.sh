@@ -26,7 +26,7 @@ exec 3>&1
 SOLR_HOSTS_ARR=(${SOLR_HOSTS})
 
 commit() {
-  echo "Committing files..."
+  echo "Committing files on ${1}..."
   HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
@@ -72,11 +72,12 @@ I=0
 J=0
 for CHUNK_FILE in $CHUNK_FILES
 do
-  I=$(( $I + 1 ))
-  echo "$CHUNK_FILE ${I}/$(wc -w <<< $CHUNK_FILES)"
-
   SOLR_HOST=${SOLR_HOSTS_ARR[(( ${J} % ${#SOLR_HOSTS_ARR[@]} ))]}
   J=$(( $J + 1 ))
+
+  I=$(( $I + 1 ))
+  echo "$CHUNK_FILE ${I}/$(wc -w <<< $CHUNK_FILES) -> ${SOLR_HOST}"
+
   post_json ${SOLR_HOST} ${CHUNK_FILE}
 
   if [[ $(( $I % ( $COMMIT_DOCS / $NUM_DOCS_PER_BATCH) )) == 0 ]]
