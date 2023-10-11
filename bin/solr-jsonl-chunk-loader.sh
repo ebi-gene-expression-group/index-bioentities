@@ -27,8 +27,7 @@ commit() {
   curl \
   --silent --show-error \
   $SOLR_AUTH \
-  "http://${1}/solr/${COLLECTION}/update" \
-  --data-binary '{ "commit": {} }' -H 'Content-type:application/json'
+  "http://${1}/solr/${COLLECTION}/update?commit=true"
 }
 
 post_json() {
