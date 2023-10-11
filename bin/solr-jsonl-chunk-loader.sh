@@ -25,7 +25,7 @@ SOLR_HOSTS_ARR=(${SOLR_HOSTS})
 commit() {
   echo "Committing files on ${1}..."
   curl \
-  --silent \
+  --silent --show-error \
   $SOLR_AUTH \
   "http://${1}/solr/${COLLECTION}/update" \
   --data-binary '{ "commit": {} }' -H 'Content-type:application/json'
@@ -35,7 +35,7 @@ post_json() {
   # The update/json/docs handler supports both regular JSON and JSON Lines:
   # https://solr.apache.org/guide/7_1/transforming-and-indexing-custom-json.html#multiple-documents-in-a-single-payload
   curl --retry 20 --retry-all-errors \
-  --silent \
+  --silent --show-error \
   $SOLR_AUTH \
   "http://${1}/solr/${COLLECTION}/update/json/docs$PROCESSOR" \
   --data-binary "@${2}" \
