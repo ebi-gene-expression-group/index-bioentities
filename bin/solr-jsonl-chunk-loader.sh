@@ -24,7 +24,7 @@ SOLR_HOSTS_ARR=(${SOLR_HOSTS})
 
 commit() {
   echo "Committing files on ${1}..."
-  curl \
+  curl --retry 20 --retry-all-errors \
   --silent --show-error \
   $SOLR_AUTH \
   "http://${1}/solr/${COLLECTION}/update?commit=true"
