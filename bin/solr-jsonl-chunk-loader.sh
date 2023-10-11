@@ -27,7 +27,7 @@ SOLR_HOSTS_ARR=(${SOLR_HOSTS})
 
 commit() {
   echo "Committing files on ${1}..."
-  HTTP_STATUS=$(curl $SOLR_AUTH -o >(cat >&3) -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
+  HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update" --data-binary '{ "commit": {} }' -H 'Content-type:application/json')
 
   if [[ ! ${HTTP_STATUS} == 2* ]]
   then
@@ -40,23 +40,22 @@ post_json() {
     local RETRIES=0
     local HTTP_STATUS=0
     WAIT_TIME=10
-    while [[ ! ${HTTP_STATUS} == 2* ]] && [[ ${RETRIES} -lt ${MAX_RETRIES} ]]
+    while [[ ! ${HTTP_STATUS} == 2* && ${RETRIES} -lt ${MAX_RETRIES} ]]
     do
-      # Run curl in a separate command, capturing output of -w "%{http_code}" into HTTP_STATUS
-      # and sending the content to this command's STDOUT with -o >(cat >&3)
       # The update/json/docs handler supports both regular JSON and JSON Lines:
       # https://solr.apache.org/guide/8_7/transforming-and-indexing-custom-json.html#multiple-documents-in-a-single-payload
-      HTTP_STATUS=$(curl --retry 10 --retry-all-errors ${SOLR_AUTH} -o >(cat >&3) -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update/json/docs${PROCESSOR}" --data-binary "@${2}" -H 'Content-type:application/json')
-      if [[ ! ${HTTP_STATUS} == 2* ]]
+      HTTP_STATUS=$(curl --retry 10 --retry-all-errors ${SOLR_AUTH} -w "%{http_code}" "http://${1}/solr/${COLLECTION}/update/json/docs${PROCESSOR}" --data-binary "@${2}" -H 'Content-type:application/json')
+      if [[ ! ${HTTP_STATUS} == 2* || $? -ne 0 ]]
       then
         echo "Warning: something went wrong when sending the JSONL file to ${1}; retrying in ${WAIT_TIME} seconds..."
         sleep ${WAIT_TIME}
         RETRIES=$((RETRIES + 1))
         WAIT_TIME=$((WAIT_TIME + WAIT_TIME))
+        HTTP_STATUS=0
       fi
     done
 
-    if [[ ! ${HTTP_STATUS} == 2* ]] || [[ ${RETRIES} -eq ${MAX_RETRIES} ]]
+    if [[ ! ${HTTP_STATUS} == 2* || ${RETRIES} -eq ${MAX_RETRIES} ]]
     then
       echo "Error: something went wrong; please, check the messages above and the logs in Solr (I tried ${MAX_RETRIES} times and gave up!)"
     fi
