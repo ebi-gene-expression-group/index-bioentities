@@ -179,7 +179,7 @@ setup() {
 }
 
 
-@test "[bioentities] Load species into SOLR" {
+@test "[bioentities] Load species into Solr" {
   if [ -z ${SOLR_HOST+x} ]; then
     skip "SOLR_HOST not defined, skipping load to Solr"
   fi
@@ -188,6 +188,7 @@ setup() {
     skip "SPECIES not defined, skipping load to solr"
   fi
 
+  export SOLR_HOST=my_solr:8983
   export BIOENTITIES_JSONL_PATH=$( pwd )
 
   run index_organism_annotations.sh
