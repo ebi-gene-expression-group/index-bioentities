@@ -1,0 +1,3 @@
+[submodule "bin/solr-jsonl-loader"]
+	path = bin/solr-jsonl-loader
+	url = https://github.com/ebi-gene-expression-group/solr-jsonl-loader.git

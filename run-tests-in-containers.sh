@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-export SOLR_HOST=my_solr:8983
 SOLR_CONT_NAME=my_solr
 SOLR_VERSION=8.7
 export ZK_HOST=gxa-zk-1
@@ -13,6 +12,10 @@ export POSTGRES_PASSWORD=postgresPass
 export POSTGRES_PORT=5432
 export DOCKER_NET=net-index-bioentities
 export jdbc_url="jdbc:postgresql://$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
+export SOLR_HOST=$SOLR_CONT_NAME:8983
+export ADMIN_USER=atlas
+export ADMIN_U_PWD=fjaso983dada
+
 
 docker_arch_line=""
 if [ $( arch ) == "arm64" ]; then
@@ -86,8 +89,8 @@ docker run --rm -i --net $DOCKER_NET $docker_arch_line \
   -e jdbc_url=$jdbc_url \
   -e POSTGRES_USER=$POSTGRES_USER \
   -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
-  -e ADMIN_USER=atlas \
-  -e ADMIN_U_PWD=fjaso983dada \
+  -e ADMIN_USER=$ADMIN_USER \
+  -e ADMIN_U_PWD=$ADMIN_U_PWD \
   -e QUERY_USER=queryu \
   -e QUERY_U_PWD=fsaf897asd3 \
   --entrypoint=/usr/local/index-bioentities/tests/run-tests.sh quay.io/ebigxa/atlas-index-base:1.5
