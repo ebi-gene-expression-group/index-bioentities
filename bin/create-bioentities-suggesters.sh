@@ -12,6 +12,14 @@ COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 #############################################################################################
 
+printf "\n\nDelete search component for suggesters...\n"
+curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
+  "delete-searchcomponent": {
+    "name": "suggest",
+    "class": "solr.SuggestComponent"
+  }
+}' http://${HOST}/solr/${COLLECTION}/config
+
 printf "\n\nCreate empty search component for suggesters if it does not exist...\n"
 curl $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
   "add-searchcomponent": {
