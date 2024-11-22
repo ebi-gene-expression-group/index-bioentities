@@ -16,7 +16,12 @@ exec 3>&1
 
 status=0
 for suggester in propertySuggesterNoHighlight bioentitySuggester propertySuggester; do
-  HTTP_STATUS=$(curl $SOLR_AUTH -w "%{http_code}" -o >(cat >&3) -s "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
+  HTTP_STATUS=$(curl $SOLR_AUTH \
+  -w "%{http_code}" \
+  -o >(cat >&3) \
+  -v \
+  --trace-ascii debug.log \
+  "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true&timeAllowed=36000000")
 
   if [[ ! $HTTP_STATUS == 2* ]];
   then
