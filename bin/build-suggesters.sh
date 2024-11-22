@@ -19,7 +19,6 @@ for suggester in propertySuggesterNoHighlight bioentitySuggester propertySuggest
   HTTP_STATUS=$(curl $SOLR_AUTH \
   -w "%{http_code}" \
   -o >(cat >&3) \
-  -s \
   -v \
   --trace-ascii debug.log \
   "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
