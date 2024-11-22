@@ -21,7 +21,7 @@ for suggester in propertySuggesterNoHighlight bioentitySuggester propertySuggest
   -o >(cat >&3) \
   -v \
   --trace-ascii debug.log \
-  "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true")
+  "http://${HOST}/solr/${COLLECTION}/suggest?suggest.dictionary=${suggester}&suggest.build=true&timeAllowed=36000000")
 
   if [[ ! $HTTP_STATUS == 2* ]];
   then
