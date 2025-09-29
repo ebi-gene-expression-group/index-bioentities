@@ -22,7 +22,7 @@ MAX_SHARDS_PER_NODE=${SOLR_MAX_SHARDS_PER_NODE:-1}
 
 
 # Default curl behavior: silent progress, show errors, fail on HTTP errors
-CURL_OPTS="-sS --fail-with-body"
+CURL_OPTS="-sS --fail"
 
 info "Deleting alias 'bioentities' if exists"
 curl $CURL_OPTS $SOLR_AUTH "http://${HOST}/solr/admin/collections?action=DELETEALIAS&name=bioentities" || warn "Alias delete may have been unnecessary"

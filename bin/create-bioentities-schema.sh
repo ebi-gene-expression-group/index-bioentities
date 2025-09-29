@@ -16,7 +16,7 @@ COLLECTION=${SOLR_COLLECTION:-"bioentities-v${SCHEMA_VERSION}"}
 
 #############################################################################################
 # Default curl behavior: silent progress, show errors, fail on HTTP errors
-CURL_OPTS="-sS --fail-with-body"
+CURL_OPTS="-sS --fail"
 
 info "Delete field type text_en"
 curl $CURL_OPTS $SOLR_AUTH -X POST -H 'Content-type:application/json' --data-binary '{
