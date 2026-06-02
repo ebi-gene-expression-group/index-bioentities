@@ -20,12 +20,13 @@ SOLR_HOST=$(get_host_from_hostport $SOLR_HOST)
 
 require_env_var "SOLR_PORT"
 
-java_opts="-Dsolr.host=$SOLR_HOST"
+java_opts="-Dsolr.hosts=http://$SOLR_HOST:$SOLR_PORT"
 java_opts="$java_opts -Dsolr.port=$SOLR_PORT"
-java_opts="$java_opts -Dzk.host=$ZK_HOST"
+java_opts="$java_opts -Dzk.hosts=http://$ZK_HOST:$ZK_PORT"
 java_opts="$java_opts -Dzk.port=$ZK_PORT"
 java_opts="$java_opts -Ddata.files.location=$BIOENTITIES"
 java_opts="$java_opts -Dexperiment.files.location=$EXPERIMENT_FILES"
+java_opts="$java_opts -Dexperiment.design.location=${EXPERIMENT_FILES}/expdesign"
 java_opts="$java_opts -Djdbc.url=$jdbc_url"
 java_opts="$java_opts -Djdbc.username=$jdbc_username"
 java_opts="$java_opts -Djdbc.password=$jdbc_password"

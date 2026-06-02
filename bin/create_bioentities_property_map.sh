@@ -18,9 +18,9 @@ SOLR_PASS=${SOLR_PASS:-"SolrRocks"}
 
 require_env_var "SOLR_PORT"
 
-java_opts="-Dsolr.host=$SOLR_HOST"
+java_opts="-Dsolr.hosts=http://$SOLR_HOST:$SOLR_PORT"
 java_opts="$java_opts -Dsolr.port=$SOLR_PORT"
-java_opts="$java_opts -Dzk.host=$ZK_HOST"
+java_opts="$java_opts -Dzk.hosts=http://$ZK_HOST:$ZK_PORT"
 java_opts="$java_opts -Dzk.port=$ZK_PORT"
 java_opts="$java_opts -Ddata.files.location=$BIOENTITIES"
 java_opts="$java_opts -Dexperiment.files.location=$EXPERIMENT_FILES"
