@@ -40,6 +40,7 @@ cmd=$cmd" bioentities-map -o $output_dir/$SPECIES.map.bin "
 status=0
 if [ -z ${ACCESSIONS+x} ]; then
   # we have no accessions, run with SPECIES
+  echo "$cmd -s $SPECIES" 
   $cmd -s $SPECIES
   status=$?
 else
@@ -47,6 +48,7 @@ else
     cmd="$cmd -f $failed_accessions_output"
   fi
   # we run for specific accessions
+  echo "$cmd -e $ACCESSIONS" 
   $cmd -e $ACCESSIONS
   status=$?
 fi
