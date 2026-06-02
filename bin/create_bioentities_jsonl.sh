@@ -20,7 +20,7 @@ SOLR_HOST=$(get_host_from_hostport $SOLR_HOST)
 
 require_env_var "SOLR_PORT"
 
-java_opts="-Dsolr.hosts=http://$SOLR_HOST:$SOLR_PORT"
+java_opts="-Dsolr.hosts=http://$SOLR_HOST:$SOLR_PORT/solr"
 java_opts="$java_opts -Dsolr.port=$SOLR_PORT"
 java_opts="$java_opts -Dzk.hosts=http://$ZK_HOST:$ZK_PORT"
 java_opts="$java_opts -Dzk.port=$ZK_PORT"
